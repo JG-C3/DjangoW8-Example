@@ -11,16 +11,7 @@
   <form action="" method="post">
     {% csrf_token %}
     <div class="weapon">
-      <label for="weapon-name">무기 이름</label>
-      <input name="weapon-name" id="weapon-name" type="text">
-    </div>
-
-    <div class="weapon">
-      <label for="weapon-power">무기 공격력</label>
-      <input name="weapon-power" id="weapon-power" type="number">
-    </div>
-
-    <div class="weapon">
+      {{weapon_form.as_p}}
       <input type="submit" value="무기 생성">
     </div>
   </form>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from random import *
 from .models import Weapon
+from .forms import WeaponForm
 
 # Create your views here.
 win = 0
@@ -51,19 +52,36 @@ def rsp_reset(request):
 
 def weapon_create(request):
     if request.method == 'POST':
-        weapon_name = request.POST.get('weapon-name')
-        weapon_power = request.POST.get('weapon-power')
+        weapon_form = WeaponForm(request.POST)
         
-        Weapon.objects.create(
-            name = weapon_name,
-            power = weapon_power,
-        )
-        return redirect('game:weapon_list')
+        if weapon_form.is_valid():
+            weapon_form.save()
+            return redirect('game:weapon_list')
     else:
-        return render(request, 'game/weapon_create.html')
+        weapon_form = WeaponForm()
+    
+    context = {
+        'weapon_form': weapon_form,
+    }
+    return render(request, 'game/weapon_form.html', context)
 
 def weapon_list(request):
     weapons = Weapon.objects.all()
+
+    default_weapons = {
+        '주먹도끼': 1,
+        '수상한 막대기': 7,
+        '낡은 검': 5,
+        '가벼운 물총': 3,
+        '수학의 정석': 9,
+    }
+
+    if len(weapons) == 0:
+        for weapon in default_weapons:
+            Weapon.objects.create(
+                name = weapon,
+                power = default_weapons[weapon],
+            )
 
     context = {
         'weapons': weapons,
