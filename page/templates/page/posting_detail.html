@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/page/posting_detail.css' %}">
+{% endblock %}
+
+{% block body %}
+  <h1>작성 글 보기</h1>
+
+  <div class="posting">
+    <table class="posting__detail">
+      <tr>
+        <td class="posting__detail__title">{{posting.title}}</td>
+        <td class="posting__detail__function">
+          <div>
+            <a class="button" href="{% url 'page:posting_update' posting.id %}">수정</a>
+            <!-- [코드 추가] onsumbit 속성을 이용해 삭제 버튼을 누르는 경우 경고창이 뜨도록 설정 -->
+            <form action="{% url 'page:posting_delete' posting.id %}" method="post" onsubmit="return contentDelete()">
+              {% csrf_token %}
+              <input class="button" type="submit" value="삭제">
+            </form>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="posting__detail__date" colspan="2">작성일 : {{posting.date|date:'Y-m-d A f'}}</td>
+      </tr>
+      <tr>
+        <td class="posting__detail__content" colspan="2">
+          <div class="content">
+            <!-- [코드 작성] 줄바꿈 처리를 위하여 linebreaksbr 사용 -->
+            <span class="content__space">{{posting.content|linebreaksbr}}</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="posting__detail__function transparent" colspan="2">
+          <div>
+            <a class="button" href="{% url 'page:posting_list' %}">글 목록</a>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <table class="posting__comment">
+      <tr>
+        <th colspan="2">댓글 목록</th>
+      </tr>
+      <tr>
+        <td class="posting__comment__create" colspan="2">
+          <!-- POST 방식으로 댓글 작성 -->
+          <form action="" method="post">
+            {% csrf_token %}
+            <div>
+              <!-- [코드 작성] Django에서 생성된 comment_form을 div태그 안쪽에 배치 -->
+              {{comment_form.as_div}}
+              <input class="button" type="submit" value="작성">
+            </div>
+          </form>
+        </td>
+      </tr>
+      <!-- 반복문을 이용하여 전체 댓글 보여주기 -->
+      {% for comment in comments %}
+        <tr>
+          <td class="posting__comment__content">
+            <!-- 댓글 내용 -->
+            <!-- [코드 작성] 줄바꿈 처리를 위하여 linebreaksbr 사용 -->
+            <span class="content__space">{{comment.content|linebreaksbr}}</span>
+          </td>
+          <td class="posting__comment__delete" rowspan="2">
+            <!-- [코드 추가] POST 방식으로 댓글 삭제 후 action을 이용해 해당 url로 이동 -->
+            <!-- [코드 추가] onsumbit 속성을 이용해 삭제 버튼을 누르는 경우 경고창이 뜨도록 설정 -->
+            <form action="{% url 'page:comment_delete' posting_id=posting.id comment_id=comment.id %}" method="post" onsubmit="return contentDelete()">
+              {% csrf_token %}
+              <input type="submit" value="x">
+            </form>
+          </td>
+        </tr>
+        <tr>
+          <td class="posting__comment__date">
+            <!-- 댓글 작성 시간 -->
+            {{comment.date|date:'Y-m-d A f'}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <!-- 댓글 구분 선 -->
+            <hr class="posting__comment__line">
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td class="posting__comment__content" colspan="2">
+            댓글이 아직 작성되지 않았습니다.
+          </td>
+        </tr>
+        <tr>
+          <td class="posting__comment__date"></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <hr class="posting__comment__line">
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- [코드 추가] 경고창을 띄우는 JavaScript 코드 작성 -->
+  <script>
+    const contents = document.getElementsByClassName("content__space")
+    for (let i=0; i<contents.length; i++) {
+      contents[i].innerHTML = contents[i].innerHTML.replace(/ /g, "&nbsp;")
+    }
+
+    function contentDelete() {
+      const result = confirm("삭제하시겠습니까?");
+      return result;
+    }
+  </script>
+{% endblock %}
