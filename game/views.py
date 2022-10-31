@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from random import *
 from .models import Weapon
+# [미션] forms.py의 WeaponForm 불러오기
 from .forms import WeaponForm
 
 # Create your views here.
