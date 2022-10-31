@@ -52,15 +52,24 @@ def rsp_reset(request):
 
 def weapon_create(request):
     if request.method == 'POST':
+        # [미션] request.POST 방식으로 전달된 값이 저장되는 WeaponForm 객체 생성
+        # [미션] None을 지우고 작성
         weapon_form = WeaponForm(request.POST)
         
+        # [미션] WeaponForm으로 넘어온 값이 유효한지 is_valid()를 이용하여 확인
+        # [미션] None을 지우고 작성
         if weapon_form.is_valid():
+            # [미션] weapon_form을 저장
             weapon_form.save()
             return redirect('game:weapon_list')
     else:
+        # [미션] WeaponForm 객체 생성
+        # [미션] None을 지우고 작성
         weapon_form = WeaponForm()
     
     context = {
+        # [미션] weapon_form을 딕셔너리 형식으로 html에 넘겨주기
+        # [미션] None을 지우고 작성
         'weapon_form': weapon_form,
     }
     return render(request, 'game/weapon_form.html', context)
@@ -68,6 +77,7 @@ def weapon_create(request):
 def weapon_list(request):
     weapons = Weapon.objects.all()
 
+    # [미션] default_weapons 딕셔너리 자유롭게 수정하기 (형식 : {'무기 이름' : 무기 공격력})
     default_weapons = {
         '주먹도끼': 1,
         '수상한 막대기': 7,
@@ -75,8 +85,10 @@ def weapon_list(request):
         '가벼운 물총': 3,
         '수학의 정석': 9,
     }
-
+    
     if len(weapons) == 0:
+        # [미션] 반복문을 이용해 default_weapons의 key값을 name, value값을 power로 Weapon 객체 생성 (Django ORM)
+        # [미션] None을 지우고 작성
         for weapon in default_weapons:
             Weapon.objects.create(
                 name = weapon,

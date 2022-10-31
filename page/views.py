@@ -3,8 +3,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Posting, Comment
 # [코드 작성] forms.py의 CommentForm 추가로 불러오기
 from .forms import PostingForm, CommentForm
-# 
-from django.contrib import messages
 
 # Create your views here.
 def index(request):
@@ -99,10 +97,9 @@ def posting_delete(request, posting_id):
 
 # [Delete] 댓글 삭제
 def comment_delete(request, posting_id, comment_id):
-    # [코드 작성] request.method가 'POST'일 경우 Comment 모델에서 comment_id에 해당하는 객체 불러오기
+    # [코드 작성] request.method가 'POST'일 경우 get_object_or_404를 이용해 Comment 모델에서 comment_id에 해당하는 객체 불러오기
     # [코드 작성] comment 삭제하기
     # [코드 추가] posting_id에 해당하는 페이지로 redirect
-    messages.warning(request, '삭제하시겠습니까?')
     if request.method == 'POST':
         comment = get_object_or_404(Comment, id=comment_id)
         comment.delete()
