@@ -95,6 +95,8 @@ def weapon_list(request):
                 name = weapon,
                 power = default_weapons[weapon],
             )
+        # 모든 Weapon 객체들을 다시 불러오기
+        weapons = Weapon.objects.all()
 
     context = {
         'weapons': weapons,
