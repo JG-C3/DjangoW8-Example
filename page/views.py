@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 # [코드 추가] models.py의 Comment 모델 추가로 불러오기
 from .models import Posting, Comment
-# [코드 작성] forms.py의 CommentForm 추가로 불러오기
+# [코드 추가] forms.py의 CommentForm 추가로 불러오기
 from .forms import PostingForm, CommentForm
 
 # Create your views here.
@@ -60,9 +60,11 @@ def posting_detail(request, posting_id):
 
     context = {
         'posting': posting,
-        # [코드 추가] comment_form을 딕셔너리 형식으로 html에 넘겨주기
+        # [코드 수정] comment_form을 딕셔너리 형식으로 html에 넘겨주기
+        # [코드 수정] None을 지우고 작성
         'comment_form': comment_form,
-        # [코드 추가] comments를 딕셔너리 형식으로 html에 넘겨주기
+        # [코드 수정] comments를 딕셔너리 형식으로 html에 넘겨주기
+        # [코드 수정] None을 지우고 작성
         'comments': comments,
     }
     return render(request, 'page/posting_detail.html', context)
@@ -97,10 +99,10 @@ def posting_delete(request, posting_id):
 
 # [Delete] 댓글 삭제
 def comment_delete(request, posting_id, comment_id):
-    # [코드 작성] request.method가 'POST'일 경우 get_object_or_404를 이용해 Comment 모델에서 comment_id에 해당하는 객체 불러오기
-    # [코드 작성] comment 삭제하기
-    # [코드 추가] posting_id에 해당하는 페이지로 redirect
     if request.method == 'POST':
+        # [코드 작성] request.method가 'POST'일 경우 get_object_or_404를 이용해 Comment 모델에서 comment_id에 해당하는 객체 불러오기
         comment = get_object_or_404(Comment, id=comment_id)
+        # [코드 작성] comment 삭제하기
         comment.delete()
+        # [코드 추가] posting_id에 해당하는 페이지로 redirect
         return redirect('page:posting_detail', posting_id)

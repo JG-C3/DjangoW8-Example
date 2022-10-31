@@ -16,6 +16,7 @@
           <div>
             <a class="button" href="{% url 'page:posting_update' posting.id %}">수정</a>
             <!-- [코드 추가] onsumbit 속성을 이용해 삭제 버튼을 누르는 경우 경고창이 뜨도록 설정 -->
+            <!-- [코드 추가] JavaScript를 이용하여 contentDelete() 함수가 실행될 때, True나 False 반환하도록 설정 -->
             <form action="{% url 'page:posting_delete' posting.id %}" method="post" onsubmit="return contentDelete()">
               {% csrf_token %}
               <input class="button" type="submit" value="삭제">
@@ -29,7 +30,7 @@
       <tr>
         <td class="posting__detail__content" colspan="2">
           <div class="content">
-            <!-- [코드 작성] 줄바꿈 처리를 위하여 linebreaksbr 사용 -->
+            <!-- [코드 추가] 줄바꿈 처리를 위하여 linebreaksbr 사용 -->
             <span class="content__space">{{posting.content|linebreaksbr}}</span>
           </div>
         </td>
@@ -65,12 +66,11 @@
         <tr>
           <td class="posting__comment__content">
             <!-- 댓글 내용 -->
-            <!-- [코드 작성] 줄바꿈 처리를 위하여 linebreaksbr 사용 -->
+            <!-- [코드 추가] 줄바꿈 처리를 위하여 linebreaksbr 사용 -->
             <span class="content__space">{{comment.content|linebreaksbr}}</span>
           </td>
           <td class="posting__comment__delete" rowspan="2">
-            <!-- [코드 추가] POST 방식으로 댓글 삭제 후 action을 이용해 해당 url로 이동 -->
-            <!-- [코드 추가] onsumbit 속성을 이용해 삭제 버튼을 누르는 경우 경고창이 뜨도록 설정 -->
+            <!-- [코드 추가] POST 방식으로 댓글 삭제 후 action을 이용해 url 이름이 comment_delete인 url로 이동 -->
             <form action="{% url 'page:comment_delete' posting_id=posting.id comment_id=comment.id %}" method="post" onsubmit="return contentDelete()">
               {% csrf_token %}
               <input type="submit" value="x">
@@ -107,16 +107,23 @@
     </table>
   </div>
 
-  <!-- [코드 추가] 경고창을 띄우는 JavaScript 코드 작성 -->
   <script>
-    const contents = document.getElementsByClassName("content__space")
-    for (let i=0; i<contents.length; i++) {
-      contents[i].innerHTML = contents[i].innerHTML.replace(/ /g, "&nbsp;")
+    // 경고창을 띄우는 JavaScript 코드
+    // contentDelete() 함수 생성
+    function contentDelete() {
+      // confirm을 이용해 경고창이 뜨도록 만들기
+      const result = confirm("삭제하시겠습니까?");
+      // 경고창의 '확인' 버튼을 누르면 True, '취소' 버튼을 누르면 False 반환
+      return result;
     }
 
-    function contentDelete() {
-      const result = confirm("삭제하시겠습니까?");
-      return result;
+    // 화면에 공백을 제대로 출력하는 코드
+    // content__space를 class 이름으로 갖는 모든 요소 가져오기
+    const contents = document.getElementsByClassName("content__space")
+    
+    // 공백을 화면에서 출력할 수 있도록 &nbsp;로 대체
+    for (let i=0; i<contents.length; i++) {
+      contents[i].innerHTML = contents[i].innerHTML.replace(/ /g, "&nbsp;");
     }
   </script>
 {% endblock %}
