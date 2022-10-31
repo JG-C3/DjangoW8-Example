@@ -123,9 +123,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-# [코드 추가] 배포 시 프로젝트에서 사용하는 모든 정적 파일을 모아두는 경로를 STATIC_ROOT로 지정
+# [코드 추가] 배포 시 프로젝트에서 사용하는 모든 정적 파일을 모아두는 경로를 STATIC_ROOT로 지정 (staticfiles)
 # [코드 추가] os.path.join()을 사용하여 지정
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
