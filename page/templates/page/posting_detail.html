@@ -69,7 +69,7 @@
             <span class="content__space">{{comment.content|linebreaksbr}}</span>
           </td>
           <td class="posting__comment__delete" rowspan="2">
-            <form action="{% url 'page:comment_delete' posting_id=posting.id comment_id=comment.id %}" method="post" onsubmit="return contentDelete()">
+            <form action="" method="post" onsubmit="return contentDelete()">
               {% csrf_token %}
               <input type="submit" value="x">
             </form>
